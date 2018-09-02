@@ -2,8 +2,11 @@
 
 import React from 'react';
 import { injectGlobal } from 'styled-components';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+
 // import CarCard from './CarCard';
 import CreateEvent from './CreateEvent';
+import EventDetail from './EventDetail';
 
 const App = () => {
 	injectGlobal`
@@ -31,9 +34,12 @@ const App = () => {
   `;
 
 	return (
-		<div>
-			<CreateEvent />
-		</div>
+		<BrowserRouter>
+			<Switch>
+				<Route exact path="/" component={CreateEvent} />
+				<Route path="/event/:id" component={EventDetail} />
+			</Switch>
+		</BrowserRouter>
 	);
 };
 

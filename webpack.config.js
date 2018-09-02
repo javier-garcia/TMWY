@@ -1,10 +1,11 @@
+const webpack = require('webpack');
 const path = require('path');
 
 module.exports = {
 	context: __dirname,
 	mode: 'development',
 	entry: {
-		app: path.resolve(__dirname, 'src/index.jsx')
+		app: path.resolve(__dirname, './src/index.jsx')
 	},
 	output: {
 		path: path.resolve(__dirname, 'public'),
@@ -12,13 +13,14 @@ module.exports = {
 		publicPath: '/public/'
 	},
 	devServer: {
-		// hot: true,
+		hot: true,
 		publicPath: '/public/',
 		historyApiFallback: true
 	},
 	resolve: {
 		extensions: ['.js', '.jsx', '.json']
 	},
+	plugins: [new webpack.HotModuleReplacementPlugin()],
 	module: {
 		rules: [
 			{

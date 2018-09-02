@@ -7,8 +7,6 @@ function CarCard() {
 		width: 448px;
 		border-radius: 40px;
 		padding: 30px 44px;
-		-webkit-box-shadow: 0px 0px 26px 4px rgba(0, 0, 0, 0.28);
-		-moz-box-shadow: 0px 0px 26px 4px rgba(0, 0, 0, 0.28);
 		box-shadow: 0px 0px 26px 4px rgba(0, 0, 0, 0.28);
 		background-color: #ffffff;
 		margin: 50px auto 0;
@@ -43,30 +41,6 @@ function CarCard() {
 						display: block;
 					}
 				}
-			}
-		}
-
-		.section {
-			margin: 30px auto;
-
-			.sectionTitle {
-				font-size: 14px;
-				color: #a6a6a6;
-				text-transform: uppercase;
-			}
-
-			p {
-				margin: 10px 0;
-
-				&.icon {
-					padding-left: 26px;
-				}
-			}
-
-			.meta {
-				font-size: 14px;
-				color: rgba(38, 0, 52, 0.5);
-				padding-left: 26px;
 			}
 		}
 
@@ -127,6 +101,32 @@ function CarCard() {
 		}
 	`;
 
+	const Section = styled.div`
+		.section {
+			margin: 30px auto;
+
+			.sectionTitle {
+				font-size: 14px;
+				color: #a6a6a6;
+				text-transform: uppercase;
+			}
+
+			p {
+				margin: 10px 0;
+
+				&.icon {
+					padding-left: 26px;
+				}
+			}
+
+			.meta {
+				font-size: 14px;
+				color: rgba(38, 0, 52, 0.5);
+				padding-left: 26px;
+			}
+		}
+	`;
+
 	const Credits = styled.div`
 		color: #260034;
 		margin: 0 auto;
@@ -153,21 +153,21 @@ function CarCard() {
 						</button>
 					</div>
 				</div>
-				<div className="section">
+				<Section>
 					<div className="sectionTitle">Departure from</div>
 					<p className="icon icon-location">Sants Train Station</p>
-				</div>
-				<div className="section">
+				</Section>
+				<Section>
 					<div className="sectionTitle">Departure time</div>
 					<p className="icon icon-time">20 Aug. 2018 - 10:30</p>
 					<p className="meta">ETA: 20 Aug. 2018 - 10:30 (-1h 10m until event start)</p>
-				</div>
-				<div className="section">
+				</Section>
+				<Section>
 					<div className="sectionTitle">Comments</div>
 					<p className="icon icon-comments">
 						This is a comment for this auto. Here one can write indication for the auto for example.
 					</p>
-				</div>
+				</Section>
 				<div className="actions">
 					<button type="button">Show people</button>
 					<button type="button">Show route</button>
