@@ -11,6 +11,14 @@
 			}
 		]
 	],
-	"plugins": ["transform-class-properties"],
+	"plugins": [
+		"transform-class-properties",
+		[
+			"babel-plugin-styled-components",
+			{
+				"displayName": true
+			}
+		]
+	],
 	"ignore": ["node_modules"]
 }

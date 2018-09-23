@@ -18,15 +18,20 @@ module.exports = {
 		historyApiFallback: true
 	},
 	resolve: {
-		extensions: ['.js', '.jsx', '.json']
+		extensions: ['.js', '.jsx', '.json', '.tsx']
 	},
 	plugins: [new webpack.HotModuleReplacementPlugin()],
 	module: {
 		rules: [
-			{
+			/* {
 				enforce: 'pre',
 				test: /\.jsx?$/,
 				loader: 'eslint-loader',
+				exclude: /node_modules/
+			}, */
+			{
+				test: /\.tsx?$/,
+				loader: 'ts-loader',
 				exclude: /node_modules/
 			},
 			{
