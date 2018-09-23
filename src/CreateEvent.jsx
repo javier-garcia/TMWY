@@ -7,6 +7,7 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import Button from './shared/Button';
+import Form from './shared/styledComponents/Form';
 
 /* const axiosClient = axios.create({
 	baseURL: 'http://localhost:3000/graphql'
@@ -45,36 +46,6 @@ ContentWrapper.Header = styled.header`
 	p {
 		margin: 0;
 		font-size: 26px;
-	}
-`;
-
-ContentWrapper.Form = styled.form`
-	margin-top: 24px;
-
-	label {
-		font-size: 13px;
-		color: #6ab231;
-		text-transform: uppercase;
-		display: block;
-		margin-top: 20px;
-	}
-
-	input {
-		border: none;
-		border-bottom: 2px solid #260034;
-		width: 100%;
-		font-size: 32px;
-		padding: 8px 0;
-		margin-top: 7px;
-
-		&::placeholder {
-			color: rgba(38, 0, 52, 0.22);
-		}
-
-		&:focus {
-			outline: none;
-			border-bottom: 2px solid #6ab231;
-		}
 	}
 `;
 
@@ -220,7 +191,7 @@ class CreateEvent extends React.Component {
 					<h1>Welcome</h1>
 					<p>Start by creating an event</p>
 				</ContentWrapper.Header>
-				<ContentWrapper.Form>
+				<Form>
 					<label htmlFor="eventName">
 						Event name
 						<input
@@ -232,7 +203,7 @@ class CreateEvent extends React.Component {
 						/>
 					</label>
 					<Button onClick={this.onContinueHandler}>Let&#39;s do it</Button>
-				</ContentWrapper.Form>
+				</Form>
 				<ContentWrapper.Footer>
 					<button type="button">Or join an existing one</button>
 				</ContentWrapper.Footer>

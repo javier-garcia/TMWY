@@ -6,13 +6,18 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 // import CarCard from './CarCard';
 import CreateEvent from './CreateEvent';
-import EventDetail from './EventDetail';
+import EventDetailView from './EventDetailView';
 
 const App = () => {
 	injectGlobal`
     html {
-      height: 100%;
       box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      height: 100%;
+      min-height: calc(100% - 0);
     }
 
     *, *:before, *:after {
@@ -23,6 +28,10 @@ const App = () => {
       background-image: linear-gradient(-134deg, #3023AE 0%, #C86DD7 100%);
       margin: 0;
       font-family: Ubuntu;
+    }
+
+    #app {
+      height: 100%;
     }
 
     button {
@@ -37,7 +46,7 @@ const App = () => {
 		<BrowserRouter>
 			<Switch>
 				<Route exact path="/" component={CreateEvent} />
-				<Route path="/event/:id" component={EventDetail} />
+				<Route path="/event/:id" component={EventDetailView} />
 			</Switch>
 		</BrowserRouter>
 	);
