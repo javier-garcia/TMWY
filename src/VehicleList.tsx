@@ -1,10 +1,11 @@
 import React from 'react';
+import axios from 'axios';
 import styled from 'styled-components';
-// import PropTypes from 'prop-types';
 import Vehicle from './interfaces/vehicle';
 
 import VehicleCard from './VehicleCard';
 import VehicleDetail from './VehicleDetail/VehicleDetail';
+import VehicleCreation from './VehicleCreation/VehicleCreation';
 
 const Wrapper = styled.div`
 	padding: 20px 50px;
@@ -35,7 +36,10 @@ const NewCarSection = styled.div`
 `;
 
 interface Props {
+	eventId: string;
 	vehicles: Array<Vehicle>;
+	onVehicleAdded: Function;
+	onVehicleRemoved: Function;
 }
 
 class VehicleList extends React.Component<Props> {
@@ -64,6 +68,34 @@ class VehicleList extends React.Component<Props> {
 		});
 	};
 
+	onVehicleRemoveClick = (vehicleId: number) => {
+		const { onVehicleRemoved } = this.props;
+
+		const graphQLQuery = `
+      mutation ($deleteVehicle: DeleteVehicle!) {
+        deleteVehicle(input: $deleteVehicle) {
+					id,
+					driver_name
+				}
+      }
+		`;
+
+		const deleteVehicle = {
+			id: vehicleId
+		};
+
+		axios
+			.post('http://localhost:3000/graphql', {
+				query: graphQLQuery,
+				variables: {
+					deleteVehicle
+				}
+			})
+			.then((result: any) => {
+				onVehicleRemoved(result.data.data.deleteVehicle);
+			});
+	};
+
 	getSelectedVehicleData() {
 		const { vehicles } = this.props;
 		const { selectedVehicle } = this.state;
@@ -80,20 +112,34 @@ class VehicleList extends React.Component<Props> {
 					<button onClick={this.onVehicleCreationClick}>Add a car!</button>
 				</NewCarSection>
 				{vehicles.map(vehicle => (
-					<VehicleCard key={vehicle.id} vehicle={vehicle} onDetailClick={this.onVehicleDetailClick} />
+					<VehicleCard
+						key={vehicle.id}
+						vehicle={vehicle}
+						onDetailClick={this.onVehicleDetailClick}
+						onRemoveClick={this.onVehicleRemoveClick}
+					/>
 				))}
-				<VehicleCard
-					key={'1234'}
-					vehicle={{
-						comments: 'Here the comments for the car.',
-						driver_name: 'Javi',
-						free_seats: 4,
-						id: '5b99404118f29a3960085070',
-						start_datetime: '',
-						start_point: 'My Place',
-						passengers: []
-					}}
-					onDetailClick={this.onVehicleDetailClick}
+			</Wrapper>
+		);
+	};
+
+	onVehicleAdded = (newVehicle: Vehicle) => {
+		const { onVehicleAdded } = this.props;
+		this.setState({
+			view: 'list'
+		});
+
+		onVehicleAdded(newVehicle);
+	};
+
+	renderVehicleCreation = () => {
+		const { eventId } = this.props;
+		return (
+			<Wrapper>
+				<VehicleCreation
+					eventId={eventId}
+					onCloseClick={this.onVehicleDetailCloseClick}
+					onVehicleAdded={this.onVehicleAdded}
 				/>
 			</Wrapper>
 		);
@@ -115,6 +161,8 @@ class VehicleList extends React.Component<Props> {
 		switch (view) {
 			case 'detail':
 				return this.renderVehicleDetail();
+			case 'creation':
+				return this.renderVehicleCreation();
 			case 'list':
 			default:
 				return this.renderVehicleList();

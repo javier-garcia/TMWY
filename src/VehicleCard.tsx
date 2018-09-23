@@ -140,13 +140,18 @@ const Credits = styled.div`
 interface Props {
 	vehicle: Vehicle;
 	onDetailClick: Function;
+	onRemoveClick: Function;
 }
 
-function VehicleCard({ vehicle, onDetailClick }: Props) {
+function VehicleCard({ vehicle, onDetailClick, onRemoveClick }: Props) {
 	const datetimeString = new Date(parseInt(vehicle.start_datetime, 10)).toLocaleString();
 
-	function onClick() {
+	function onDetailButtonClick() {
 		onDetailClick(vehicle.id);
+	}
+
+	function onRemoveButtonClick() {
+		onRemoveClick(vehicle.id);
 	}
 
 	return (
@@ -163,7 +168,7 @@ function VehicleCard({ vehicle, onDetailClick }: Props) {
 							<button type="button">
 								<i className="icon icon-edit" />
 							</button>
-							<button type="button">
+							<button type="button" onClick={onRemoveButtonClick}>
 								<i className="icon icon-remove" />
 							</button>
 						</div>
@@ -183,7 +188,7 @@ function VehicleCard({ vehicle, onDetailClick }: Props) {
 					</Section> */}
 					<div className="actions">
 						{/* <button type="button">Show people</button> */}
-						<button type="button" onClick={onClick}>
+						<button type="button" onClick={onDetailButtonClick}>
 							Show details
 						</button>
 					</div>
