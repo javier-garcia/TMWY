@@ -18,7 +18,7 @@ module.exports = {
 		historyApiFallback: true
 	},
 	resolve: {
-		extensions: ['.js', '.jsx', '.json', '.tsx']
+		extensions: ['.js', '.jsx', '.json', '.ts', '.tsx']
 	},
 	plugins: [new webpack.HotModuleReplacementPlugin()],
 	module: {
