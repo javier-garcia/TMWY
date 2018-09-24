@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
@@ -9,7 +8,11 @@ const Wrapper = styled.div`
 	box-shadow: 4px 0 14px 0 rgba(0, 0, 0, 0.56);
 `;
 
-function EventDetail({ event }) {
+interface Props {
+	event: any;
+}
+
+function EventDetail({ event }: Props) {
 	const datetimeString = new Date(parseInt(event.datetime, 10)).toLocaleString();
 
 	return (
@@ -27,8 +30,8 @@ function EventDetail({ event }) {
 					src="https://maps.google.com/maps?width=100%&amp;height=600&amp;hl=en&amp;q=1%20Grafton%20Street%2C%20Dublin%2C%20Ireland+(My%20Business%20Name)&amp;ie=UTF8&amp;t=&amp;z=14&amp;iwloc=B&amp;output=embed"
 					frameBorder="0"
 					scrolling="no"
-					marginHeight="0"
-					marginWidth="0"
+					marginHeight={0}
+					marginWidth={0}
 				>
 					<a href="https://www.maps.ie/create-google-map/">Create Google Map</a>
 				</iframe>
@@ -37,9 +40,5 @@ function EventDetail({ event }) {
 		</Wrapper>
 	);
 }
-
-EventDetail.propTypes = {
-	event: PropTypes.any.isRequired // eslint-disable-line react/forbid-prop-types
-};
 
 export default EventDetail;

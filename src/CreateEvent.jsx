@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import Button from './shared/Button';
+import Button from './shared/styledComponents/Button';
 import Form from './shared/styledComponents/Form';
 
 /* const axiosClient = axios.create({
