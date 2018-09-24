@@ -1,8 +1,9 @@
 import React from 'react';
-import axios from 'axios';
 import styled from 'styled-components';
 
 import Vehicle from './interfaces/vehicle';
+
+import { getEvent } from './providers/event.provider';
 
 import EventDetail from './EventDetail';
 import VehicleList from './VehicleList';
@@ -42,44 +43,15 @@ class EventDetailView extends React.Component<Props, State> {
 	componentDidMount() {
 		const { match } = this.props;
 
-		const graphQLQuery = `
-      {
-        getEvent(id: "${match.params.id}") {
-          id
-					name
-					admin_name
-					datetime
-					place
-					vehicles {
-						id
-						driver_name
-						free_seats
-						start_point
-						start_datetime
-						comments
-						passengers {
-							id
-							name
-						}
-					}
-        }
-      }
-		`;
-
-		axios
-			.post('http://localhost:3000/graphql', {
-				query: graphQLQuery
-			})
-			.then(result => {
-				this.setState({
-					event: result.data.data.getEvent
-				});
+		getEvent(match.params.id).then(result => {
+			this.setState({
+				event: result.data.data.getEvent
 			});
+		});
 	}
 
 	onVehicleAdded = (vehicle: Vehicle) => {
 		const { event } = this.state;
-		//const newVehicleArray: Array<Vehicle> = [vehicle];
 
 		if (event !== null) {
 			const vehicles = [...event.vehicles, ...[vehicle]];

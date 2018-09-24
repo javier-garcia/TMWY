@@ -1,6 +1,7 @@
 import React, { SyntheticEvent } from 'react';
-import axios from 'axios';
 import styled from 'styled-components';
+
+import { addVehicle } from '../providers/vehicle.provider';
 
 import BackArrowButton from '../shared/BackArrowButton';
 import Form from '../shared/styledComponents/Form';
@@ -56,23 +57,6 @@ class VehicleCreation extends React.Component<Props> {
 		const { eventId, onVehicleAdded } = this.props;
 		const { driverName, driverEmail, freeSeats } = this.state;
 
-		const graphQLQuery = `
-      mutation ($newVehicle: NewVehicle!) {
-        newVehicle(input: $newVehicle) {
-					id
-						driver_name
-						free_seats
-						start_point
-						start_datetime
-						comments
-						passengers {
-							id
-							name
-						}
-				}
-      }
-		`;
-
 		const newVehicle = {
 			event_id: eventId,
 			driver_name: driverName,
@@ -80,17 +64,10 @@ class VehicleCreation extends React.Component<Props> {
 			free_seats: freeSeats
 		};
 
-		axios
-			.post('http://localhost:3000/graphql', {
-				query: graphQLQuery,
-				variables: {
-					newVehicle
-				}
-			})
-			.then((result: any) => {
-				console.log(result);
-				onVehicleAdded(result.data.data.newVehicle);
-			});
+		addVehicle(newVehicle).then((result: any) => {
+			console.log(result);
+			onVehicleAdded(result.data.data.newVehicle);
+		});
 	};
 
 	render() {
