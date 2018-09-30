@@ -30,17 +30,18 @@ class VehicleCreation extends React.Component<Props> {
 		freeSeats: 4
 	};
 
-	onDriverNameChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const input = event.target as HTMLInputElement;
-		this.setState({
-			driverName: input.value
-		});
+	driverNameRef = React.createRef<HTMLInputElement>();
+
+	componentDidMount = () => {
+		if (this.driverNameRef.current) {
+			this.driverNameRef.current.focus();
+		}
 	};
 
-	onDriverEmailChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+	onFieldChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const input = event.target as HTMLInputElement;
 		this.setState({
-			driverEmail: input.value
+			[input.name]: input.value
 		});
 	};
 
@@ -65,7 +66,6 @@ class VehicleCreation extends React.Component<Props> {
 		};
 
 		addVehicle(newVehicle).then((result: any) => {
-			console.log(result);
 			onVehicleAdded(result.data.data.newVehicle);
 		});
 	};
@@ -81,11 +81,12 @@ class VehicleCreation extends React.Component<Props> {
 					<label htmlFor="driverName">
 						Driver name
 						<input
+							ref={this.driverNameRef}
 							type="text"
 							placeholder="Driver name"
 							value={driverName}
-							id="driverName"
-							onChange={this.onDriverNameChangeHandler}
+							name="driverName"
+							onChange={this.onFieldChangeHandler}
 						/>
 					</label>
 
@@ -95,8 +96,8 @@ class VehicleCreation extends React.Component<Props> {
 							type="text"
 							placeholder="Driver email"
 							value={driverEmail}
-							id="driverEmail"
-							onChange={this.onDriverEmailChangeHandler}
+							name="driverEmail"
+							onChange={this.onFieldChangeHandler}
 						/>
 					</label>
 
@@ -106,7 +107,7 @@ class VehicleCreation extends React.Component<Props> {
 							type="number"
 							placeholder="Free seats"
 							value={freeSeats}
-							id="freeSeats"
+							name="freeSeats"
 							onChange={this.onFreeSeatsChangeHandler}
 						/>
 					</label>

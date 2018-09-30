@@ -5,7 +5,7 @@ module.exports = {
 	context: __dirname,
 	mode: 'development',
 	entry: {
-		app: path.resolve(__dirname, './src/index.jsx')
+		app: path.resolve(__dirname, './src/index.tsx')
 	},
 	output: {
 		path: path.resolve(__dirname, 'public'),

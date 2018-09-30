@@ -26,4 +26,26 @@ const addVehicle = (newVehicle: any) => {
 	});
 };
 
-export { addVehicle };
+const removeVehicle = (vehicleId: string) => {
+	const graphQLQuery = `
+      mutation ($deleteVehicle: DeleteVehicle!) {
+        deleteVehicle(input: $deleteVehicle) {
+					id,
+					driver_name
+				}
+      }
+		`;
+
+	const deleteVehicle = {
+		id: vehicleId
+	};
+
+	return axios.post('http://localhost:3000/graphql', {
+		query: graphQLQuery,
+		variables: {
+			deleteVehicle
+		}
+	});
+};
+
+export { addVehicle, removeVehicle };

@@ -25,8 +25,15 @@ const getEvent = (eventId: string) => {
       }
     `;
 
-	return axios.post('http://localhost:3000/graphql', {
-		query: graphQLQuery
+	return new Promise((resolve, reject) => {
+		axios
+			.post('http://localhost:3000/graphql', { query: graphQLQuery })
+			.then(result => {
+				resolve(result.data.data.getEvent);
+			})
+			.catch(error => {
+				reject(error);
+			});
 	});
 };
 

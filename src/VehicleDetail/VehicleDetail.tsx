@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import Vehicle from '../interfaces/vehicle';
 import PassengerList from './PassengerList';
 import BackArrowButton from '../shared/BackArrowButton';
+import AddPassengerButton from '../AddPassengerButton';
 
 const Wrapper = styled.div`
 	position: absolute;
@@ -130,10 +131,12 @@ const Section = styled.div`
 
 interface Props {
 	vehicle: Vehicle | undefined;
+	onPassengerAdded: Function;
+	onPassengerRemoved: Function;
 	onCloseClick: Function;
 }
 
-const VehicleDetail = ({ vehicle, onCloseClick }: Props) => {
+const VehicleDetail = ({ vehicle, onPassengerAdded, onPassengerRemoved, onCloseClick }: Props) => {
 	const onCloseButtonClick = () => {
 		onCloseClick();
 	};
@@ -156,7 +159,7 @@ const VehicleDetail = ({ vehicle, onCloseClick }: Props) => {
 									<i className="icon icon-edit" />
 								</button>
 								<button type="button">
-									<i className="icon icon-remove" />
+									<i className="icon ic m on-remove" />
 								</button>
 							</div>
 						</div>
@@ -176,7 +179,8 @@ const VehicleDetail = ({ vehicle, onCloseClick }: Props) => {
 						<div>
 							<Section>
 								<div className="sectionTitle">Passengers</div>
-								<PassengerList passengers={vehicle.passengers} />
+								<PassengerList passengers={vehicle.passengers} onPassengerRemoved={onPassengerRemoved} />
+								<AddPassengerButton vehicleId={vehicle.id} onPassengerAdded={onPassengerAdded} />
 							</Section>
 						</div>
 					</div>

@@ -2,11 +2,12 @@ import React from 'react';
 import styled from 'styled-components';
 
 import Vehicle from './interfaces/vehicle';
+import Passenger from './interfaces/passenger';
 
 import { getEvent } from './providers/event.provider';
 
 import EventDetail from './EventDetail';
-import VehicleList from './VehicleList';
+import VehiclesSection from './VehiclesSection';
 
 const Wrapper = styled.div`
 	display: flex;
@@ -43,18 +44,18 @@ class EventDetailView extends React.Component<Props, State> {
 	componentDidMount() {
 		const { match } = this.props;
 
-		getEvent(match.params.id).then(result => {
+		getEvent(match.params.id).then((event: any) => {
 			this.setState({
-				event: result.data.data.getEvent
+				event: event
 			});
 		});
 	}
 
-	onVehicleAdded = (vehicle: Vehicle) => {
+	onVehicleAdded = (newVehicle: Vehicle) => {
 		const { event } = this.state;
 
 		if (event !== null) {
-			const vehicles = [...event.vehicles, ...[vehicle]];
+			const vehicles = [...event.vehicles, ...[newVehicle]];
 
 			const newEventState = Object.assign(event, { vehicles });
 
@@ -70,7 +71,47 @@ class EventDetailView extends React.Component<Props, State> {
 		if (event !== null) {
 			const vehicles = event.vehicles.filter((vehicle: Vehicle) => vehicle.id !== removedVehicle.id);
 
-			const newEvent = Object.assign(event, { vehicles });
+			const newEventState = Object.assign(event, { vehicles });
+
+			this.setState({
+				event: newEventState
+			});
+		}
+	};
+
+	onPassengerAdded = (newPassenger: Passenger, vehicleId: String) => {
+		const { event } = this.state;
+
+		if (event !== null) {
+			const vehicles = event.vehicles.map((vehicle: Vehicle) => {
+				if (vehicle.id !== vehicleId) return vehicle;
+
+				vehicle.passengers = [...vehicle.passengers, ...[newPassenger]];
+
+				return vehicle;
+			});
+
+			const newEventState = Object.assign(event, { vehicles });
+
+			this.setState({
+				event: newEventState
+			});
+		}
+	};
+
+	onPassengerRemoved = (removedPassenger: Passenger, vehicleId: String) => {
+		const { event } = this.state;
+
+		if (event != null) {
+			const vehicles = event.vehicles.map((vehicle: Vehicle) => {
+				if (vehicle.id !== vehicleId) return vehicle;
+
+				vehicle.passengers = vehicle.passengers.filter((passenger: Passenger) => {
+					return passenger.id !== removedPassenger.id;
+				});
+
+				return vehicle;
+			});
 
 			const newEventState = Object.assign(event, { vehicles });
 
@@ -90,11 +131,13 @@ class EventDetailView extends React.Component<Props, State> {
 		return (
 			<Wrapper>
 				<EventDetail event={event} />
-				<VehicleList
+				<VehiclesSection
 					vehicles={event.vehicles}
 					eventId={event.id}
 					onVehicleAdded={this.onVehicleAdded}
 					onVehicleRemoved={this.onVehicleRemoved}
+					onPassengerAdded={this.onPassengerAdded}
+					onPassengerRemoved={this.onPassengerRemoved}
 				/>
 			</Wrapper>
 		);

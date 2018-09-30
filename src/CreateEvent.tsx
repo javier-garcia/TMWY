@@ -1,17 +1,9 @@
-// @flow
-/* eslint class-methods-use-this: ["error", { "exceptMethods": ["renderStep2"] }] */
-
 import React from 'react';
 import styled from 'styled-components';
-import { withRouter } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 import axios from 'axios';
 import Button from './shared/styledComponents/Button';
 import Form from './shared/styledComponents/Form';
-
-/* const axiosClient = axios.create({
-	baseURL: 'http://localhost:3000/graphql'
-}); */
 
 const BodyWrapper = styled.div`
 	background-image: linear-gradient(-140deg, #b4ec51 0%, #429321 100%);
@@ -37,7 +29,7 @@ const ContentWrapper = styled.div`
 	color: #260034;
 `;
 
-ContentWrapper.Header = styled.header`
+const Header = styled.header`
 	h1 {
 		font-size: 26px;
 		margin-bottom: 0;
@@ -49,7 +41,7 @@ ContentWrapper.Header = styled.header`
 	}
 `;
 
-ContentWrapper.Footer = styled.div`
+const Footer = styled.div`
 	button {
 		font-size: 16px;
 		color: #9855ca;
@@ -61,7 +53,7 @@ ContentWrapper.Footer = styled.div`
 	}
 `;
 
-class CreateEvent extends React.Component {
+class CreateEvent extends React.Component<RouteComponentProps<any>, any> {
 	state = {
 		step: 1,
 		eventName: '',
@@ -74,45 +66,10 @@ class CreateEvent extends React.Component {
 		showEmail: true
 	};
 
-	onInputChangeHandler = event => {
+	onFieldChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const input = event.target as HTMLInputElement;
 		this.setState({
-			eventName: event.target.value
-		});
-	};
-
-	onDescriptionChangeHandler = event => {
-		this.setState({
-			eventDescription: event.target.value
-		});
-	};
-
-	onLocationChangeHandler = event => {
-		this.setState({
-			eventLocation: event.target.value
-		});
-	};
-
-	onStartDatetimeChangeHandler = event => {
-		this.setState({
-			eventStartDatetime: event.target.value
-		});
-	};
-
-	onEndDatetimeChangeHandler = event => {
-		this.setState({
-			eventEndDatetime: event.target.value
-		});
-	};
-
-	onAdminNameChangeHandler = event => {
-		this.setState({
-			adminName: event.target.value
-		});
-	};
-
-	onAdminEmailChangeHandler = event => {
-		this.setState({
-			adminEmail: event.target.value
+			[input.name]: input.value
 		});
 	};
 
@@ -123,11 +80,11 @@ class CreateEvent extends React.Component {
 		});
 	};
 
-	onCreateHandler = event => {
+	onCreateHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
 		event.preventDefault();
 
 		const { history } = this.props;
-		const { eventName, adminName, adminEmail, eventStartDatetime, place } = this.state;
+		const { eventName, adminName, adminEmail, eventStartDatetime, eventLocation } = this.state;
 
 		const graphQLQuery = `
 			mutation ($newEvent: NewEvent!) {
@@ -147,13 +104,15 @@ class CreateEvent extends React.Component {
 						admin_name: adminName,
 						admin_email: adminEmail,
 						datetime: eventStartDatetime.toString(),
-						place
+						place: eventLocation
 					}
 				}
 			})
 			.then(result => {
 				history.push(`/event/${result.data.data.newEvent.id}`);
 			});
+
+		return false;
 	};
 
 	getEventStartDatetimeString() {
@@ -187,10 +146,10 @@ class CreateEvent extends React.Component {
 
 		return (
 			<ContentWrapper>
-				<ContentWrapper.Header>
+				<Header>
 					<h1>Welcome</h1>
 					<p>Start by creating an event</p>
-				</ContentWrapper.Header>
+				</Header>
 				<Form>
 					<label htmlFor="eventName">
 						Event name
@@ -198,15 +157,15 @@ class CreateEvent extends React.Component {
 							type="text"
 							placeholder="Your event name"
 							value={eventName}
-							id="eventName"
-							onChange={this.onInputChangeHandler}
+							name="eventName"
+							onChange={this.onFieldChangeHandler}
 						/>
 					</label>
 					<Button onClick={this.onContinueHandler}>Let&#39;s do it</Button>
 				</Form>
-				<ContentWrapper.Footer>
+				<Footer>
 					<button type="button">Or join an existing one</button>
-				</ContentWrapper.Footer>
+				</Footer>
 			</ContentWrapper>
 		);
 	}
@@ -216,19 +175,19 @@ class CreateEvent extends React.Component {
 
 		return (
 			<ContentWrapper>
-				<ContentWrapper.Header>
+				<Header>
 					<h1>Step 1 of 2</h1>
 					<p>Tell us more about your event</p>
-				</ContentWrapper.Header>
-				<ContentWrapper.Form>
+				</Header>
+				<Form>
 					<label htmlFor="eventName">
 						Event name
 						<input
 							type="text"
 							placeholder="Your event name"
 							value={eventName}
-							id="eventName"
-							onChange={this.onInputChangeHandler}
+							name="eventName"
+							onChange={this.onFieldChangeHandler}
 						/>
 					</label>
 					<label htmlFor="eventDescription">
@@ -237,8 +196,8 @@ class CreateEvent extends React.Component {
 							type="text"
 							placeholder="The best event ever"
 							value={eventDescription}
-							id="eventDescription"
-							onChange={this.onDescriptionChangeHandler}
+							name="eventDescription"
+							onChange={this.onFieldChangeHandler}
 						/>
 					</label>
 					<label htmlFor="eventLocation">
@@ -247,8 +206,8 @@ class CreateEvent extends React.Component {
 							type="text"
 							placeholder="TBD"
 							value={eventLocation}
-							id="eventLocation"
-							onChange={this.onLocationChangeHandler}
+							name="eventLocation"
+							onChange={this.onFieldChangeHandler}
 						/>
 					</label>
 					<label htmlFor="eventStartDatetime">
@@ -257,8 +216,8 @@ class CreateEvent extends React.Component {
 							type="text"
 							placeholder="TBD"
 							value={this.getEventStartDatetimeString()}
-							id="eventStartDatetime"
-							onChange={this.onStartDatetimeChangeHandler}
+							name="eventStartDatetime"
+							onChange={this.onFieldChangeHandler}
 						/>
 					</label>
 					<label htmlFor="eventEndDatetime">
@@ -267,12 +226,12 @@ class CreateEvent extends React.Component {
 							type="text"
 							placeholder="TBD"
 							value={this.getEventEndDatetimeString()}
-							id="eventEndDatetime"
-							onChange={this.onEndDatetimeChangeHandler}
+							name="eventEndDatetime"
+							onChange={this.onFieldChangeHandler}
 						/>
 					</label>
 					<Button onClick={this.onContinueHandler}>Continue</Button>
-				</ContentWrapper.Form>
+				</Form>
 			</ContentWrapper>
 		);
 	}
@@ -282,19 +241,19 @@ class CreateEvent extends React.Component {
 
 		return (
 			<ContentWrapper>
-				<ContentWrapper.Header>
+				<Header>
 					<h1>Step 1 of 2</h1>
 					<p>Tell us more about your event</p>
-				</ContentWrapper.Header>
-				<ContentWrapper.Form>
+				</Header>
+				<Form>
 					<label htmlFor="hostName">
 						Your name
 						<input
 							type="text"
 							placeholder="Your name"
 							value={adminName}
-							id="hostName"
-							onChange={this.onAdminNameChangeHandler}
+							name="adminName"
+							onChange={this.onFieldChangeHandler}
 						/>
 					</label>
 					<label htmlFor="hostEmail">
@@ -303,18 +262,18 @@ class CreateEvent extends React.Component {
 							type="text"
 							placeholder="Your email"
 							value={adminEmail}
-							id="hostEmail"
-							onChange={this.onAdminEmailChangeHandler}
+							name="adminEmail"
+							onChange={this.onFieldChangeHandler}
 						/>
 					</label>
 					<label htmlFor="showHostEmail">
 						Your email
-						<input type="checkbox" checked={showEmail} id="showHostEmail" onChange={this.onInputChangeHandler} />
+						<input type="checkbox" checked={showEmail} id="showHostEmail" onChange={this.onFieldChangeHandler} />
 					</label>
 					<Button type="submit" onClick={this.onCreateHandler}>
 						Continue
 					</Button>
-				</ContentWrapper.Form>
+				</Form>
 			</ContentWrapper>
 		);
 	}
@@ -327,9 +286,5 @@ class CreateEvent extends React.Component {
 		);
 	}
 }
-
-CreateEvent.propTypes = {
-	history: PropTypes.any.isRequired // eslint-disable-line react/forbid-prop-types
-};
 
 export default withRouter(CreateEvent);
