@@ -1,7 +1,7 @@
 import React, { MouseEventHandler } from 'react';
 import styled from 'styled-components';
 
-import VehicleCard from '../VehicleCard';
+import VehicleCard from '../components/VehicleCard';
 
 const NewCarSection = styled.div`
 	border: 2px dashed rgba(0, 0, 0, 0.5);

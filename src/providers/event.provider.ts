@@ -37,4 +37,31 @@ const getEvent = (eventId: string) => {
 	});
 };
 
-export { getEvent };
+const createEvent = (newEvent: any) => {
+	const graphQLQuery = `
+			mutation ($newEvent: NewEvent!) {
+				newEvent(input: $newEvent) {
+					id
+					name
+				}
+			}
+		`;
+
+	return new Promise((resolve, reject) => {
+		axios
+			.post('http://localhost:3000/graphql', {
+				query: graphQLQuery,
+				variables: {
+					newEvent
+				}
+			})
+			.then(result => {
+				resolve(result.data.data.newEvent);
+			})
+			.catch(error => {
+				reject(error);
+			});
+	});
+};
+
+export { getEvent, createEvent };

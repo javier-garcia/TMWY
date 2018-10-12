@@ -4,8 +4,8 @@ import React from 'react';
 import { injectGlobal } from 'styled-components';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
-// import CarCard from './CarCard';
-import CreateEvent from './CreateEvent';
+import Landing from './Landing';
+import EventCreation from './EventCreation/EventCreation';
 import EventDetailView from './EventDetailView';
 
 const App = () => {
@@ -45,7 +45,8 @@ const App = () => {
 	return (
 		<BrowserRouter>
 			<Switch>
-				<Route exact path="/" component={CreateEvent} />
+				<Route exact path="/" component={Landing} />
+				<Route path="/new-event" component={EventCreation} />
 				<Route path="/event/:id" component={EventDetailView} />
 			</Switch>
 		</BrowserRouter>
