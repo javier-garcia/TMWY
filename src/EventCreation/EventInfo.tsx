@@ -1,68 +1,61 @@
 import React, { Fragment } from 'react';
+// import Datetime from 'react-datetime';
+// @ts-ignore
+import { DatetimePickerTrigger } from 'rc-datetime-picker';
+import moment from 'moment';
 
-class EventInfo extends React.PureComponent<any> {
-	onContinueHandler = () => {
-		const { validateField } = this.props;
+import LocationSearch from '../components/LocationSearch';
 
-		validateField('eventName');
+// import '../assets/stylesheets/react-datetime.css';
+import '../assets/stylesheets/picker.min.css';
 
-		// Formik validateField take a moment to update the errors
-		setTimeout(this.checkErrorsAndNext, 5);
-	};
-
-	checkErrorsAndNext = () => {
-		const { errors, nextButtonHandler } = this.props;
-
-		if (Object.keys(errors).length <= 0) {
-			nextButtonHandler();
-		}
-	};
-
-	// onstartDatetimeChangeHandler = (datetime: string | Moment) => {
-	// 	this.setState({
-	// 		eventStartDatetime: datetime
-	// 	});
-	// };
-
-	// onEndDatetimeChangeHandler = (datetime: string | Moment) => {
-	// 	this.setState({
-	// 		eventEndDatetime: datetime
-	// 	});
-	// };
-
-	getEventStartDatetimeString() {
+class EventInfo extends React.Component<any> {
+	getEventStartDatetimeString = () => {
 		const { eventStartDatetime } = this.props;
 
 		return `${eventStartDatetime.toLocaleDateString()} ${eventStartDatetime.toLocaleTimeString()}`;
-	}
+	};
 
-	getEventEndDatetimeString() {
+	getEventEndDatetimeString = () => {
 		const { eventEndDatetime } = this.props;
 
 		return `${eventEndDatetime.toLocaleDateString()} ${eventEndDatetime.toLocaleTimeString()}`;
-	}
+	};
 
 	render = () => {
 		const {
 			onFieldChangeHandler,
+			onFieldFocusHandler,
+			onFieldBlurHandler,
+			onLocationChangeHandler,
+			onLocationSelectHandler,
+			onStartDatetimeChangeHandler,
+			errors,
 			eventName,
 			eventDescription,
 			eventLocation,
-			eventStartDatetime,
-			eventEndDatetime
+			eventStartDatetime
 		} = this.props;
 
+		const shortcuts = {
+			Today: moment()
+		};
+
 		return (
-			<Fragment>
+			<div style={{ overflow: 'auto', height: '440px', padding: '16px' }}>
 				<label htmlFor="eventName">
-					Event name
+					Event name *
 					<input
+						className={errors.eventName ? 'error' : ''}
 						type="text"
 						placeholder="Your event name"
 						value={eventName}
 						name="eventName"
 						onChange={onFieldChangeHandler}
+						onFocus={onFieldFocusHandler}
+						onBlur={onFieldBlurHandler}
 					/>
+					{errors.eventName ? <span className="errorMessage">{errors.eventName}</span> : null}
 				</label>
 				<label htmlFor="eventDescription">
 					Event description
@@ -76,19 +69,27 @@ class EventInfo extends React.PureComponent<any> {
 				</label>
 				<label htmlFor="eventLocation">
 					Where
-					<input type="text" placeholder="TBD" value={eventLocation} name="eventLocation" onChange={onFieldChangeHandler} />
+					<LocationSearch
+						className="location-search-input"
+						placeholder="The event location"
+						eventLocation={eventLocation}
+						onLocationChange={onLocationChangeHandler}
+						onLocationSelectHandler={onLocationSelectHandler}
+					/>
 				</label>
 				<label htmlFor="eventStartDatetime">
 					When
-					<input
-						type="text"
-						placeholder="TBD"
-						value={this.getEventStartDatetimeString()}
-						name="eventStartDatetime"
-						onChange={onFieldChangeHandler}
-					/>
+					<DatetimePickerTrigger
+						moment={eventStartDatetime}
+						shortcuts={shortcuts}
+						onChange={onStartDatetimeChangeHandler}
+						appendToBody
+					>
+						<input type="text" value={eventStartDatetime ? eventStartDatetime.format('YYYY-MM-DD HH:mm') : ''} readOnly />
+					</DatetimePickerTrigger>
+					{errors.eventStartDatetime ? <span className="errorMessage">{errors.eventStartDatetime}</span> : null}
 				</label>
-				<label htmlFor="eventEndDatetime">
+				{/* <label htmlFor="eventEndDatetime">
 					Until
 					<input
 						type="text"
@@ -97,8 +98,8 @@ class EventInfo extends React.PureComponent<any> {
 						name="eventEndDatetime"
 						onChange={onFieldChangeHandler}
 					/>
-				</label>
-			</Fragment>
+    </label> */}
+			</div>
 		);
 	};
 }
