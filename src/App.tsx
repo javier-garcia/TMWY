@@ -18,6 +18,7 @@ const App = () => {
       margin: 0;
       height: 100%;
       min-height: calc(100% - 0);
+      overflow: hidden;
     }
 
     *, *:before, *:after {

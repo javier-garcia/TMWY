@@ -1,10 +1,16 @@
 import React, { Fragment } from 'react';
 
-import Button from '../shared/styledComponents/Button';
-
-class AdminInfo extends React.PureComponent<any> {
+class AdminInfo extends React.Component<any> {
 	render = () => {
-		const { onFieldChangeHandler, adminName, adminEmail, showEmail } = this.props;
+		const {
+			onFieldChangeHandler,
+			onFieldFocusHandler,
+			onFieldBlurHandler,
+			errors,
+			adminName,
+			adminEmail,
+			showEmail
+		} = this.props;
 		return (
 			<Fragment>
 				<label htmlFor="hostName">
@@ -13,10 +19,20 @@ class AdminInfo extends React.PureComponent<any> {
 				</label>
 				<label htmlFor="hostEmail">
 					Your email
-					<input type="text" placeholder="Your email" value={adminEmail} name="adminEmail" onChange={onFieldChangeHandler} />
+					<input
+						className={errors.adminEmail ? 'error' : ''}
+						type="email"
+						placeholder="Your email"
+						value={adminEmail}
+						name="adminEmail"
+						onChange={onFieldChangeHandler}
+						onFocus={onFieldFocusHandler}
+						onBlur={onFieldBlurHandler}
+					/>
+					{errors.adminEmail ? <span className="errorMessage">{errors.adminEmail}</span> : null}
 				</label>
 				<label htmlFor="showHostEmail">
-					Your email
+					Should we show your email?
 					<input type="checkbox" checked={showEmail} id="showHostEmail" onChange={onFieldChangeHandler} />
 				</label>
 			</Fragment>
