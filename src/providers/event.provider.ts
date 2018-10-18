@@ -9,6 +9,7 @@ const getEvent = (eventId: string) => {
 					admin_name
 					datetime
 					place
+					place_coords
 					vehicles {
 						id
 						driver_name

@@ -1,6 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import GoogleAPI from './components/GoogleAPI';
+import LocationMap from './components/LocationMap';
+
 const Wrapper = styled.div`
 	height: 100%;
 	padding: 20px 50px;
@@ -12,33 +15,41 @@ interface Props {
 	event: any;
 }
 
-function EventDetail({ event }: Props) {
-	const datetimeString = new Date(parseInt(event.datetime, 10)).toLocaleString();
+class EventDetail extends React.PureComponent<any> {
+	getParsedCoordenates = () => {
+		const { event } = this.props;
 
-	return (
-		<Wrapper>
-			<h1>{event.name}</h1>
-			<p>(admin: {event.admin_name})</p>
-			<p>When: {datetimeString}</p>
-			<p>Where: {event.place}</p>
+		if (event.place_coords == null) return null;
 
-			<div style={{ width: '100%' }}>
-				<iframe
-					title="mapa"
-					width="100%"
-					height="200"
-					src="https://maps.google.com/maps?width=100%&amp;height=600&amp;hl=en&amp;q=1%20Grafton%20Street%2C%20Dublin%2C%20Ireland+(My%20Business%20Name)&amp;ie=UTF8&amp;t=&amp;z=14&amp;iwloc=B&amp;output=embed"
-					frameBorder="0"
-					scrolling="no"
-					marginHeight={0}
-					marginWidth={0}
-				>
-					<a href="https://www.maps.ie/create-google-map/">Create Google Map</a>
-				</iframe>
-			</div>
-			<br />
-		</Wrapper>
-	);
+		let splittedCoordenates = event.place_coords.split('/');
+
+		return {
+			lat: splittedCoordenates[0],
+			lng: splittedCoordenates[1]
+		};
+	};
+
+	render() {
+		const { event } = this.props;
+		const datetimeString = new Date(parseInt(event.datetime, 10)).toLocaleString();
+		const eventCoords = this.getParsedCoordenates();
+
+		return (
+			<Wrapper>
+				<h1>{event.name}</h1>
+				<p>(admin: {event.admin_name})</p>
+				<p>When: {datetimeString}</p>
+				<p>Where: {event.place}</p>
+
+				<div style={{ width: '100%', height: '30vh', position: 'relative' }}>
+					<GoogleAPI>
+						{google => <LocationMap google={google} location={event.place} position={eventCoords} onMapClicked={null} />}
+					</GoogleAPI>
+				</div>
+				<br />
+			</Wrapper>
+		);
+	}
 }
 
 export default EventDetail;
