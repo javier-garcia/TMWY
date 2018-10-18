@@ -56,9 +56,9 @@ class LocationSearch extends React.Component<any> {
 
 	render = () => {
 		const { placeholder, className, eventLocation, onLocationChange } = this.props;
-		// @ts-ignore
 		return (
 			<ContentWrapper>
+				// @ts-ignore
 				<PlacesAutocomplete value={eventLocation} onChange={onLocationChange} onSelect={this.onLocationSelectHandler}>
 					{({ getInputProps, suggestions, getSuggestionItemProps, loading }: any) => {
 						return (

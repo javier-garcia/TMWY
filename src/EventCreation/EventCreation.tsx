@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import styled from 'styled-components';
 import { withRouter, RouteComponentProps, Route, Redirect } from 'react-router-dom';
 import queryString from 'query-string';
@@ -8,6 +8,7 @@ import { createEvent } from '../providers/event.provider';
 
 import EventInfo from './EventInfo';
 import AdminInfo from './AdminInfo';
+import GoogleAPI from '../components/GoogleAPI';
 import LocationMap from '../components/LocationMap';
 
 import Dialog from '../shared/styledComponents/Dialog';
@@ -20,6 +21,14 @@ const BodyWrapper = styled.div`
 	justify-content: center;
 	align-items: center;
 	height: 100vh;
+`;
+
+const MapWrapper = styled.div`
+	position: relative;
+	width: 410px;
+	height: 668px;
+	left: 433px;
+	top: -538px;
 `;
 
 interface State {
@@ -35,7 +44,6 @@ interface State {
 	adminName: String;
 	adminEmail: String;
 	showEmail: Boolean;
-	google: any;
 }
 
 class EventCreation extends React.Component<RouteComponentProps<any>, State> {
@@ -56,11 +64,8 @@ class EventCreation extends React.Component<RouteComponentProps<any>, State> {
 		// eventEndDatetime: new Date(),
 		adminName: '',
 		adminEmail: '',
-		showEmail: true,
-		google: null
+		showEmail: true
 	};
-
-	googleMapsPromise: Promise<any> | null = null;
 
 	componentDidMount = () => {
 		const { location, history, match } = this.props;
@@ -84,18 +89,6 @@ class EventCreation extends React.Component<RouteComponentProps<any>, State> {
 		if (location.pathname === `${match.path}/event-info`) {
 			this.setState({
 				currentStep: 1
-			});
-		}
-
-		if (!(window as any).google) {
-			this.getGoogleMaps().then(google => {
-				this.setState({
-					google
-				});
-			});
-		} else {
-			this.setState({
-				google: (window as any).google
 			});
 		}
 	};
@@ -127,32 +120,6 @@ class EventCreation extends React.Component<RouteComponentProps<any>, State> {
 			return;
 		}
 	};
-
-	getGoogleMaps() {
-		// If we haven't already defined the promise, define it
-		if (!this.googleMapsPromise) {
-			this.googleMapsPromise = new Promise(resolve => {
-				// Add a global handler for when the API finishes loading
-				(window as any).resolveGoogleMapsPromise = () => {
-					// Resolve the promise
-					resolve(google);
-
-					// Tidy up
-					delete (window as any).resolveGoogleMapsPromise;
-				};
-
-				// Load the Google Maps API
-				const script = document.createElement('script');
-				const API = 'AIzaSyDYIN0KCDEf7373llU54-yJS9BYGcOtI60';
-				script.src = `https://maps.googleapis.com/maps/api/js?key=${API}&libraries=places&callback=resolveGoogleMapsPromise`;
-				script.async = true;
-				document.body.appendChild(script);
-			});
-		}
-
-		// Return a promise for the Google Maps API
-		return this.googleMapsPromise;
-	}
 
 	onFieldChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const input = event.target as HTMLInputElement;
@@ -304,15 +271,23 @@ class EventCreation extends React.Component<RouteComponentProps<any>, State> {
 		event.preventDefault();
 
 		const { history } = this.props;
-		const { eventName, adminName, adminEmail, eventStartDatetime, eventLocation } = this.state;
+		const { eventName, adminName, adminEmail, eventStartDatetime, eventLocation, eventCoordinates } = this.state;
 
-		createEvent({
+		let newEvent = {
 			name: eventName,
 			admin_name: adminName,
 			admin_email: adminEmail,
 			datetime: eventStartDatetime.unix(),
 			place: eventLocation
-		}).then((newEvent: any) => {
+		};
+
+		if (eventCoordinates != null) {
+			newEvent = Object.assign(newEvent, {
+				place_coords: `${(eventCoordinates as any).lat}/${(eventCoordinates as any).lng}`
+			});
+		}
+
+		createEvent(newEvent).then((newEvent: any) => {
 			history.push(`/event/${newEvent.id}`);
 		});
 
@@ -351,8 +326,7 @@ class EventCreation extends React.Component<RouteComponentProps<any>, State> {
 			adminName,
 			adminEmail,
 			showEmail,
-			errors,
-			google
+			errors
 		} = this.state;
 		const { match } = this.props;
 
@@ -362,31 +336,37 @@ class EventCreation extends React.Component<RouteComponentProps<any>, State> {
 					<Dialog.ContentWrapper>
 						{this.renderHeader()}
 						<Form onSubmit={this.onCreateHandler}>
-							<Redirect from={match.path} to={`${match.path}/event-info`} />
+							<Redirect exact from="/new-event" to={`${match.path}/event-info`} />
 							<Route
 								path={`${match.path}/event-info`}
-								render={() => {
-									if (google === null) return null;
+								render={() => (
+									<GoogleAPI>
+										{google => {
+											if (!google) return null;
 
-									return (
-										<React.Fragment>
-											<EventInfo
-												onFieldChangeHandler={this.onFieldChangeHandler}
-												onFieldFocusHandler={this.onFieldFocusHandler}
-												onFieldBlurHandler={this.onFieldBlurHandler}
-												onLocationChangeHandler={this.onLocationChangeHandler}
-												onLocationSelectHandler={this.onLocationSelectHandler}
-												onStartDatetimeChangeHandler={this.onStartDatetimeChangeHandler}
-												errors={errors}
-												eventName={eventName}
-												eventDescription={eventDescription}
-												eventLocation={eventLocation}
-												eventStartDatetime={eventStartDatetime}
-											/>
-											<LocationMap google={google} location={eventLocation} position={eventCoordinates} onMapClicked={null} />
-										</React.Fragment>
-									);
-								}}
+											return (
+												<Fragment>
+													<EventInfo
+														onFieldChangeHandler={this.onFieldChangeHandler}
+														onFieldFocusHandler={this.onFieldFocusHandler}
+														onFieldBlurHandler={this.onFieldBlurHandler}
+														onLocationChangeHandler={this.onLocationChangeHandler}
+														onLocationSelectHandler={this.onLocationSelectHandler}
+														onStartDatetimeChangeHandler={this.onStartDatetimeChangeHandler}
+														errors={errors}
+														eventName={eventName}
+														eventDescription={eventDescription}
+														eventLocation={eventLocation}
+														eventStartDatetime={eventStartDatetime}
+													/>
+													<MapWrapper>
+														<LocationMap google={google} location={eventLocation} position={eventCoordinates} onMapClicked={null} />
+													</MapWrapper>
+												</Fragment>
+											);
+										}}
+									</GoogleAPI>
+								)}
 							/>
 							<Route
 								path={`${match.path}/admin-info`}
