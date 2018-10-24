@@ -15,6 +15,8 @@ import Dialog from '../shared/styledComponents/Dialog';
 import Form from '../shared/styledComponents/Form';
 import Button from '../shared/styledComponents/Button';
 
+import Event from '../interfaces/Event';
+
 const BodyWrapper = styled.div`
 	background-image: linear-gradient(-140deg, #b4ec51 0%, #429321 100%);
 	display: flex;
@@ -210,18 +212,7 @@ class EventCreation extends React.Component<RouteComponentProps<any>, State> {
 	};
 
 	onStartDatetimeChangeHandler = (datetime: string | Moment) => {
-		console.log(datetime);
-
-		let newState: any = {
-			eventStartDatetime: datetime,
-			errors: Object.assign({}, this.state.errors)
-		};
-
-		if (typeof datetime === 'object' || datetime === '') {
-			delete newState.errors.eventStartDatetime;
-		}
-
-		this.setState(newState);
+		this.setState({ eventStartDatetime: datetime });
 	};
 
 	validateEventInfo = (shouldUpdateState: boolean) => {
@@ -271,10 +262,19 @@ class EventCreation extends React.Component<RouteComponentProps<any>, State> {
 		event.preventDefault();
 
 		const { history } = this.props;
-		const { eventName, adminName, adminEmail, eventStartDatetime, eventLocation, eventCoordinates } = this.state;
+		const {
+			eventName,
+			eventDescription,
+			adminName,
+			adminEmail,
+			eventStartDatetime,
+			eventLocation,
+			eventCoordinates
+		} = this.state;
 
-		let newEvent = {
+		let newEvent: Event = {
 			name: eventName,
+			description: eventDescription,
 			admin_name: adminName,
 			admin_email: adminEmail,
 			datetime: eventStartDatetime.unix(),

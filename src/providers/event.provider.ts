@@ -1,12 +1,14 @@
 import axios from 'axios';
 
-const getEvent = (eventId: string) => {
+const getEvent = (eventId: string): Promise<Event> => {
 	const graphQLQuery = `
       {
         getEvent(id: "${eventId}") {
           id
 					name
+					description
 					admin_name
+					admin_email
 					datetime
 					place
 					place_coords
@@ -14,7 +16,8 @@ const getEvent = (eventId: string) => {
 						id
 						driver_name
 						free_seats
-						start_point
+						start_location
+						start_coordinates
 						start_datetime
 						comments
 						passengers {
@@ -39,6 +42,7 @@ const getEvent = (eventId: string) => {
 };
 
 const createEvent = (newEvent: any) => {
+	console.log(newEvent);
 	const graphQLQuery = `
 			mutation ($newEvent: NewEvent!) {
 				newEvent(input: $newEvent) {

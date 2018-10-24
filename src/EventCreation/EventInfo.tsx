@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 // import Datetime from 'react-datetime';
 // @ts-ignore
 import { DatetimePickerTrigger } from 'rc-datetime-picker';
@@ -10,18 +10,6 @@ import LocationSearch from '../components/LocationSearch';
 import '../assets/stylesheets/picker.min.css';
 
 class EventInfo extends React.Component<any> {
-	getEventStartDatetimeString = () => {
-		const { eventStartDatetime } = this.props;
-
-		return `${eventStartDatetime.toLocaleDateString()} ${eventStartDatetime.toLocaleTimeString()}`;
-	};
-
-	getEventEndDatetimeString = () => {
-		const { eventEndDatetime } = this.props;
-
-		return `${eventEndDatetime.toLocaleDateString()} ${eventEndDatetime.toLocaleTimeString()}`;
-	};
-
 	render = () => {
 		const {
 			onFieldChangeHandler,
@@ -87,7 +75,6 @@ class EventInfo extends React.Component<any> {
 					>
 						<input type="text" value={eventStartDatetime ? eventStartDatetime.format('YYYY-MM-DD HH:mm') : ''} readOnly />
 					</DatetimePickerTrigger>
-					{errors.eventStartDatetime ? <span className="errorMessage">{errors.eventStartDatetime}</span> : null}
 				</label>
 				{/* <label htmlFor="eventEndDatetime">
 					Until

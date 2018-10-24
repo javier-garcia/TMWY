@@ -1,11 +1,15 @@
-import Vehicle from './vehicle';
+import Vehicle from './Vehicle';
 
 interface Event {
-	id: string;
+	id?: string;
 	name: string;
-	admin_name: string;
-	place: string;
-	vehicles: Array<Vehicle>;
+	description?: string;
+	admin_name?: string;
+	admin_email?: string;
+	datetime?: number;
+	place?: string;
+	place_coords?: string;
+	vehicles?: Array<Vehicle>;
 }
 
 export default Event;

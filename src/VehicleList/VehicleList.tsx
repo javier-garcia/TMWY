@@ -3,6 +3,10 @@ import styled from 'styled-components';
 
 import VehicleCard from '../components/VehicleCard';
 
+const VehicleListWrapper = styled.div`
+	flex: 3;
+`;
+
 const NewCarSection = styled.div`
 	border: 2px dashed rgba(0, 0, 0, 0.5);
 	text-align: center;

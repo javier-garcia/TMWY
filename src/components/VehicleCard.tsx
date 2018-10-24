@@ -1,7 +1,9 @@
 import React from 'react';
 // import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import Vehicle from '../interfaces/vehicle';
+import moment from 'moment';
+
+import Vehicle from '../interfaces/Vehicle';
 
 const CarCardWrapper = styled.article`
 	box-sizing: border-box;
@@ -144,15 +146,21 @@ interface Props {
 }
 
 function VehicleCard({ vehicle, onDetailClick, onRemoveClick }: Props) {
-	const datetimeString = new Date(parseInt(vehicle.start_datetime, 10)).toLocaleString();
+	const datetimeString = moment.unix(vehicle.start_datetime!).format('dddd, DD/MM/YYYY, HH:mm');
 
-	function onDetailButtonClick() {
+	const onDetailButtonClick = () => {
 		onDetailClick(vehicle.id);
-	}
+	};
 
-	function onRemoveButtonClick() {
+	const onRemoveButtonClick = () => {
 		onRemoveClick(vehicle.id);
-	}
+	};
+
+	const getFreeSeats = (): Number => {
+		return vehicle.free_seats - vehicle.passengers!.length;
+	};
+
+	const freeSeats = getFreeSeats();
 
 	return (
 		<div>
@@ -163,7 +171,7 @@ function VehicleCard({ vehicle, onDetailClick, onRemoveClick }: Props) {
 				<div className="CarInfoContainer">
 					<div className="header">
 						<h3>{`${vehicle.driver_name}'s Car`}</h3>
-						<div>{`2 free seats of ${vehicle.free_seats} available`}</div>
+						<div>{freeSeats > 0 ? `${freeSeats} free seats of ${vehicle.free_seats} available` : 'No seats available'}</div>
 						<div className="options">
 							<button type="button">
 								<i className="icon icon-edit" />
@@ -175,19 +183,14 @@ function VehicleCard({ vehicle, onDetailClick, onRemoveClick }: Props) {
 					</div>
 					<Section>
 						<div className="sectionTitle">Departure from</div>
-						<p className="icon icon-location">{vehicle.start_point}</p>
+						<p className="icon icon-location">{vehicle.start_location}</p>
 					</Section>
 					<Section>
 						<div className="sectionTitle">Departure time</div>
 						<p className="icon icon-time">{datetimeString}</p>
 						<p className="meta">ETA: 20 Aug. 2018 - 10:30 (-1h 10m until event start)</p>
 					</Section>
-					{/* <Section>
-						<div className="sectionTitle">Comments</div>
-						<p className="icon icon-comments">{vehicle.comments}</p>
-					</Section> */}
 					<div className="actions">
-						{/* <button type="button">Show people</button> */}
 						<button type="button" onClick={onDetailButtonClick}>
 							Show details
 						</button>

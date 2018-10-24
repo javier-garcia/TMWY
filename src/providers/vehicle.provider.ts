@@ -7,7 +7,8 @@ const addVehicle = (newVehicle: any) => {
 					id
 						driver_name
 						free_seats
-						start_point
+						start_location
+						start_coordinates
 						start_datetime
 						comments
 						passengers {

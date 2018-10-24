@@ -1,6 +1,8 @@
 interface Passenger {
-	id: string;
+	id?: string;
+	vehicle_id: String;
 	name: string;
+	email?: String;
 }
 
 export default Passenger;

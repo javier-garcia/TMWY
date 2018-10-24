@@ -1,8 +1,13 @@
 import React, { SyntheticEvent } from 'react';
 import styled from 'styled-components';
+import moment, { Moment } from 'moment';
+// @ts-ignore
+import { DatetimePickerTrigger } from 'rc-datetime-picker';
 
+import Vehicle from '../interfaces/Vehicle';
 import { addVehicle } from '../providers/vehicle.provider';
 
+import LocationSearch from '../components/LocationSearch';
 import BackArrowButton from '../shared/BackArrowButton';
 import Form from '../shared/styledComponents/Form';
 import Button from '../shared/styledComponents/Button';
@@ -27,7 +32,11 @@ class VehicleCreation extends React.Component<Props> {
 	state = {
 		driverName: '',
 		driverEmail: '',
-		freeSeats: 4
+		freeSeats: 4,
+		startLocation: '',
+		startCoordinates: '',
+		startDatetime: moment(),
+		comments: ''
 	};
 
 	driverNameRef = React.createRef<HTMLInputElement>();
@@ -38,7 +47,7 @@ class VehicleCreation extends React.Component<Props> {
 		}
 	};
 
-	onFieldChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+	onFieldChangeHandler = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
 		const input = event.target as HTMLInputElement;
 		this.setState({
 			[input.name]: input.value
@@ -52,27 +61,57 @@ class VehicleCreation extends React.Component<Props> {
 		});
 	};
 
+	onLocationChangeHandler = (startLocation: any) => {
+		this.setState({ startLocation, startCoordinates: null });
+	};
+
+	onLocationSelectHandler = (startLocation: String, startCoordinates: any) => {
+		this.setState({
+			startLocation,
+			startCoordinates
+		});
+	};
+
 	formSubmitHandler = (event: React.FormEvent) => {
 		event.preventDefault();
 
 		const { eventId, onVehicleAdded } = this.props;
-		const { driverName, driverEmail, freeSeats } = this.state;
+		const { driverName, driverEmail, freeSeats, startLocation, startCoordinates, startDatetime, comments } = this.state;
 
-		const newVehicle = {
+		let newVehicle: Vehicle = {
 			event_id: eventId,
 			driver_name: driverName,
 			driver_email: driverEmail,
-			free_seats: freeSeats
+			free_seats: freeSeats,
+			start_location: startLocation,
+			start_datetime: startDatetime.unix(),
+			comments
 		};
+
+		if (startCoordinates != null) {
+			newVehicle = Object.assign(newVehicle, {
+				start_coordinates: `${(startCoordinates as any).lat}/${(startCoordinates as any).lng}`
+			});
+		}
 
 		addVehicle(newVehicle).then((result: any) => {
 			onVehicleAdded(result.data.data.newVehicle);
 		});
 	};
 
+	onStartDatetimeChangeHandler = (datetime: string | Moment) => {
+		this.setState({
+			startDatetime: datetime
+		});
+	};
+
 	render() {
 		const { onCloseClick } = this.props;
-		const { driverName, driverEmail, freeSeats } = this.state;
+		const { driverName, driverEmail, freeSeats, startLocation, startDatetime, comments } = this.state;
+
+		const shortcuts = {
+			Today: moment()
+		};
 
 		return (
 			<Wrapper>
@@ -109,6 +148,39 @@ class VehicleCreation extends React.Component<Props> {
 							value={freeSeats}
 							name="freeSeats"
 							onChange={this.onFreeSeatsChangeHandler}
+						/>
+					</label>
+
+					<label htmlFor="location">
+						Starting point
+						<LocationSearch
+							className="location-search-input"
+							placeholder="The event location"
+							location={startLocation}
+							onLocationChange={this.onLocationChangeHandler}
+							onLocationSelectHandler={this.onLocationSelectHandler}
+						/>
+					</label>
+
+					<label htmlFor="startDatetime">
+						When
+						<DatetimePickerTrigger
+							moment={startDatetime}
+							shortcuts={shortcuts}
+							onChange={this.onStartDatetimeChangeHandler}
+							appendToBody
+						>
+							<input type="text" value={startDatetime ? startDatetime.format('DD-MM-YYYY HH:mm') : ''} readOnly />
+						</DatetimePickerTrigger>
+					</label>
+
+					<label htmlFor="comments">
+						Comments
+						<textarea
+							placeholder="Something more to say?"
+							value={comments}
+							name="comments"
+							onChange={this.onFieldChangeHandler}
 						/>
 					</label>
 
