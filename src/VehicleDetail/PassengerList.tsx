@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Passenger from '../interfaces/passenger';
+import Passenger from '../interfaces/Passenger';
 
 interface Props {
 	passengers: Array<Passenger>;

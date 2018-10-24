@@ -27,12 +27,12 @@ const ContentWrapper = styled.div`
 
 class LocationSearch extends React.Component<any> {
 	state = {
-		eventLocation: '',
+		location: '',
 		eventCoordinates: ''
 	};
 
-	onLocationChangeHandler = (eventLocation: any) => {
-		this.setState({ eventLocation });
+	onLocationChangeHandler = (location: any) => {
+		this.setState({ location });
 	};
 
 	onLocationSelectHandler = (address: any) => {
@@ -43,11 +43,7 @@ class LocationSearch extends React.Component<any> {
 			// console.log(results[0]);
 			getLatLng(results[0])
 				.then((latLng: any) => {
-					console.log(latLng);
-					/* this.setState({
-						eventLocation: address,
-						eventCoordinates: latLng
-					}); */
+					// console.log(latLng);
 					onLocationSelectHandler(address, latLng);
 				})
 				.catch((error: any) => console.error('Error', error));
@@ -55,11 +51,11 @@ class LocationSearch extends React.Component<any> {
 	};
 
 	render = () => {
-		const { placeholder, className, eventLocation, onLocationChange } = this.props;
+		const { placeholder, className, location, onLocationChange } = this.props;
 		return (
 			<ContentWrapper>
 				// @ts-ignore
-				<PlacesAutocomplete value={eventLocation} onChange={onLocationChange} onSelect={this.onLocationSelectHandler}>
+				<PlacesAutocomplete value={location} onChange={onLocationChange} onSelect={this.onLocationSelectHandler}>
 					{({ getInputProps, suggestions, getSuggestionItemProps, loading }: any) => {
 						return (
 							<div style={{ position: 'relative' }}>

@@ -31,6 +31,27 @@ const Form = styled.form`
 		}
 	}
 
+	textarea {
+		border: 2px solid #260034;
+		width: 100%;
+		font-size: 24px;
+		padding: 8px;
+		margin-top: 7px;
+
+		&::placeholder {
+			color: rgba(38, 0, 52, 0.22);
+		}
+
+		&:focus {
+			outline: none;
+			border: 2px solid #6ab231;
+		}
+
+		&.error {
+			border-color: red;
+		}
+	}
+
 	.errorMessage {
 		color: red;
 	}

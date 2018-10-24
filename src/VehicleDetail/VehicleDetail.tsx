@@ -1,7 +1,8 @@
 import React, { Fragment } from 'react';
 import styled from 'styled-components';
+import moment from 'moment';
 
-import Vehicle from '../interfaces/vehicle';
+import Vehicle from '../interfaces/Vehicle';
 import PassengerList from './PassengerList';
 import BackArrowButton from '../shared/BackArrowButton';
 import AddPassengerButton from '../AddPassengerButton';
@@ -130,7 +131,7 @@ const Section = styled.div`
 `;
 
 interface Props {
-	vehicle: Vehicle | undefined;
+	vehicle: Vehicle;
 	onPassengerAdded: Function;
 	onPassengerRemoved: Function;
 	onCloseClick: Function;
@@ -141,9 +142,14 @@ const VehicleDetail = ({ vehicle, onPassengerAdded, onPassengerRemoved, onCloseC
 		onCloseClick();
 	};
 
+	const getFreeSeats = () => {
+		return vehicle.free_seats - vehicle.passengers!.length;
+	};
+
 	const renderVehicle = () => {
 		if (vehicle) {
-			const datetimeString = new Date(parseInt(vehicle.start_datetime, 10)).toLocaleString();
+			const datetimeString = moment.unix(vehicle.start_datetime!).format('dddd, DD/MM/YYYY, HH:mm');
+			const freeSeats = getFreeSeats();
 
 			return (
 				<Fragment>
@@ -152,8 +158,8 @@ const VehicleDetail = ({ vehicle, onPassengerAdded, onPassengerRemoved, onCloseC
 					</div>
 					<div className="CarInfoContainer">
 						<div className="header">
-							<h3>{`${vehicle.driver_name}'s Car`}</h3>
-							<div>{`2 free seats of ${vehicle.free_seats} available`}</div>
+							<h3>{`${vehicle.driver_name}'s Car ${vehicle.driver_email ? `(${vehicle.driver_email})` : ''}`}</h3>
+							<div>{freeSeats > 0 ? `${freeSeats} free seats of ${vehicle.free_seats} available` : 'No seats available'}</div>
 							<div className="options">
 								<button type="button">
 									<i className="icon icon-edit" />
@@ -165,7 +171,7 @@ const VehicleDetail = ({ vehicle, onPassengerAdded, onPassengerRemoved, onCloseC
 						</div>
 						<Section>
 							<div className="sectionTitle">Departure from</div>
-							<p className="icon icon-location">{vehicle.start_point}</p>
+							<p className="icon icon-location">{vehicle.start_location}</p>
 						</Section>
 						<Section>
 							<div className="sectionTitle">Departure time</div>
@@ -179,8 +185,8 @@ const VehicleDetail = ({ vehicle, onPassengerAdded, onPassengerRemoved, onCloseC
 						<div>
 							<Section>
 								<div className="sectionTitle">Passengers</div>
-								<PassengerList passengers={vehicle.passengers} onPassengerRemoved={onPassengerRemoved} />
-								<AddPassengerButton vehicleId={vehicle.id} onPassengerAdded={onPassengerAdded} />
+								<PassengerList passengers={vehicle.passengers!} onPassengerRemoved={onPassengerRemoved} />
+								{freeSeats > 0 ? <AddPassengerButton vehicleId={vehicle.id!} onPassengerAdded={onPassengerAdded} /> : null}
 							</Section>
 						</div>
 					</div>

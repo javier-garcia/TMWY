@@ -1,5 +1,6 @@
 import React from 'react';
 
+import Passenger from './interfaces/Passenger';
 import { addPassenger } from './providers/passenger.provider';
 
 interface Props {
@@ -41,7 +42,7 @@ class AddPassengerButton extends React.Component<Props> {
 		const { vehicleId, onPassengerAdded } = this.props;
 		const { passengerName } = this.state;
 
-		const newPassenger = {
+		const newPassenger: Passenger = {
 			vehicle_id: vehicleId,
 			name: passengerName,
 			email: ''

@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import Vehicle from './interfaces/vehicle';
-import Passenger from './interfaces/passenger';
+import Vehicle from './interfaces/Vehicle';
+import Passenger from './interfaces/Passenger';
 
 import { removeVehicle } from './providers/vehicle.provider';
 import { removePassenger } from './providers/passenger.provider';
@@ -125,14 +125,19 @@ class VehiclesSection extends React.Component<Props> {
 	};
 
 	renderVehicleDetail = () => {
+		const vehicle = this.getSelectedVehicleData();
 		return (
 			<Wrapper>
-				<VehicleDetail
-					vehicle={this.getSelectedVehicleData()}
-					onPassengerAdded={this.onPassengerAdded}
-					onPassengerRemoved={this.onPassengerRemoved}
-					onCloseClick={this.onVehicleDetailCloseClick}
-				/>
+				{vehicle ? (
+					<VehicleDetail
+						vehicle={vehicle}
+						onPassengerAdded={this.onPassengerAdded}
+						onPassengerRemoved={this.onPassengerRemoved}
+						onCloseClick={this.onVehicleDetailCloseClick}
+					/>
+				) : (
+					<p>Vehicle not found</p>
+				)}
 			</Wrapper>
 		);
 	};

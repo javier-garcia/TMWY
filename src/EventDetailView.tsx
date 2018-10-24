@@ -1,8 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import Vehicle from './interfaces/vehicle';
-import Passenger from './interfaces/passenger';
+import Event from './interfaces/Event';
+import Vehicle from './interfaces/Vehicle';
+import Passenger from './interfaces/Passenger';
 
 import { getEvent } from './providers/event.provider';
 
@@ -16,14 +17,6 @@ const Wrapper = styled.div`
 
 interface Props {
 	match: any;
-}
-
-interface Event {
-	id: string;
-	name: string;
-	admin_name: string;
-	place: string;
-	vehicles: Array<Vehicle>;
 }
 
 interface State {
@@ -57,7 +50,7 @@ class EventDetailView extends React.Component<Props, State> {
 		if (event !== null) {
 			const vehicles = [...event.vehicles, ...[newVehicle]];
 
-			const newEventState = Object.assign(event, { vehicles });
+			const newEventState: Event = Object.assign(event, { vehicles });
 
 			this.setState({
 				event: newEventState
@@ -86,7 +79,7 @@ class EventDetailView extends React.Component<Props, State> {
 			const vehicles = event.vehicles.map((vehicle: Vehicle) => {
 				if (vehicle.id !== vehicleId) return vehicle;
 
-				vehicle.passengers = [...vehicle.passengers, ...[newPassenger]];
+				vehicle.passengers = [...vehicle.passengers!, ...[newPassenger]];
 
 				return vehicle;
 			});
@@ -106,7 +99,7 @@ class EventDetailView extends React.Component<Props, State> {
 			const vehicles = event.vehicles.map((vehicle: Vehicle) => {
 				if (vehicle.id !== vehicleId) return vehicle;
 
-				vehicle.passengers = vehicle.passengers.filter((passenger: Passenger) => {
+				vehicle.passengers = vehicle.passengers!.filter((passenger: Passenger) => {
 					return passenger.id !== removedPassenger.id;
 				});
 
