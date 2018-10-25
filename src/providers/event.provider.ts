@@ -42,7 +42,6 @@ const getEvent = (eventId: string): Promise<Event> => {
 };
 
 const createEvent = (newEvent: any) => {
-	console.log(newEvent);
 	const graphQLQuery = `
 			mutation ($newEvent: NewEvent!) {
 				newEvent(input: $newEvent) {

@@ -176,7 +176,12 @@ function VehicleCard({ vehicle, onDetailClick, onRemoveClick }: Props) {
 							<button type="button">
 								<i className="icon icon-edit" />
 							</button>
-							<button type="button" onClick={onRemoveButtonClick}>
+							<button
+								type="button"
+								onClick={() => {
+									if (window.confirm('Are you sure you wish to delete this item?')) onRemoveButtonClick();
+								}}
+							>
 								<i className="icon icon-remove" />
 							</button>
 						</div>

@@ -1,7 +1,7 @@
 import React from 'react';
 
-import Passenger from './interfaces/Passenger';
-import { addPassenger } from './providers/passenger.provider';
+import Passenger from '../interfaces/Passenger';
+import { addPassenger } from '../providers/passenger.provider';
 
 interface Props {
 	vehicleId: string;

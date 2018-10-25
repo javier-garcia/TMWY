@@ -5,7 +5,7 @@ import moment from 'moment';
 import Vehicle from '../interfaces/Vehicle';
 import PassengerList from './PassengerList';
 import BackArrowButton from '../shared/BackArrowButton';
-import AddPassengerButton from '../AddPassengerButton';
+import AddPassengerButton from '../components/AddPassengerButton';
 
 const Wrapper = styled.div`
 	position: absolute;

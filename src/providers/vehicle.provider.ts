@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { resolve } from 'dns';
 
 const addVehicle = (newVehicle: any) => {
 	const graphQLQuery = `
@@ -19,11 +20,20 @@ const addVehicle = (newVehicle: any) => {
       }
     `;
 
-	return axios.post('http://localhost:3000/graphql', {
-		query: graphQLQuery,
-		variables: {
-			newVehicle
-		}
+	return new Promise((resolve, reject) => {
+		axios
+			.post('http://localhost:3000/graphql', {
+				query: graphQLQuery,
+				variables: {
+					newVehicle
+				}
+			})
+			.then(result => {
+				resolve(result.data.data.newVehicle);
+			})
+			.catch(error => {
+				reject(error);
+			});
 	});
 };
 
@@ -41,11 +51,20 @@ const removeVehicle = (vehicleId: string) => {
 		id: vehicleId
 	};
 
-	return axios.post('http://localhost:3000/graphql', {
-		query: graphQLQuery,
-		variables: {
-			deleteVehicle
-		}
+	return new Promise((resolve, reject) => {
+		axios
+			.post('http://localhost:3000/graphql', {
+				query: graphQLQuery,
+				variables: {
+					deleteVehicle
+				}
+			})
+			.then(result => {
+				resolve(result.data.data.deleteVehicle);
+			})
+			.catch(error => {
+				reject(error);
+			});
 	});
 };
 

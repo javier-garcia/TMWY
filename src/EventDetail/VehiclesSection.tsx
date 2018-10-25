@@ -1,15 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import Vehicle from './interfaces/Vehicle';
-import Passenger from './interfaces/Passenger';
+import Vehicle from '../interfaces/Vehicle';
+import Passenger from '../interfaces/Passenger';
 
-import { removeVehicle } from './providers/vehicle.provider';
-import { removePassenger } from './providers/passenger.provider';
+import { removeVehicle } from '../providers/vehicle.provider';
+import { removePassenger } from '../providers/passenger.provider';
 
-import VehicleList from './VehicleList/VehicleList';
-import VehicleDetail from './VehicleDetail/VehicleDetail';
-import VehicleCreation from './VehicleCreation/VehicleCreation';
+import VehicleList from '../VehicleList/VehicleList';
+import VehicleDetail from '../VehicleDetail/VehicleDetail';
+import VehicleCreation from '../VehicleCreation/VehicleCreation';
 
 const Wrapper = styled.div`
 	padding: 20px 50px;
@@ -67,8 +67,8 @@ class VehiclesSection extends React.Component<Props> {
 	onVehicleRemoveClick = (vehicleId: string) => {
 		const { onVehicleRemoved } = this.props;
 
-		removeVehicle(vehicleId).then((result: any) => {
-			onVehicleRemoved(result.data.data.deleteVehicle);
+		removeVehicle(vehicleId).then((deleteVehicle: any) => {
+			onVehicleRemoved(deleteVehicle);
 		});
 	};
 

@@ -5,6 +5,8 @@ import queryString from 'query-string';
 import moment, { Moment } from 'moment';
 
 import { createEvent } from '../providers/event.provider';
+import Event from '../interfaces/Event';
+import { isValidEmail } from '../utils';
 
 import EventInfo from './EventInfo';
 import AdminInfo from './AdminInfo';
@@ -14,8 +16,6 @@ import LocationMap from '../components/LocationMap';
 import Dialog from '../shared/styledComponents/Dialog';
 import Form from '../shared/styledComponents/Form';
 import Button from '../shared/styledComponents/Button';
-
-import Event from '../interfaces/Event';
 
 const BodyWrapper = styled.div`
 	background-image: linear-gradient(-140deg, #b4ec51 0%, #429321 100%);
@@ -135,7 +135,7 @@ class EventCreation extends React.Component<RouteComponentProps<any>, State> {
 			delete newState.errors.eventName;
 		}
 
-		if (input.name === 'adminEmail' && (input.value === '' || this.isValidEmail(input.value))) {
+		if (input.name === 'adminEmail' && (input.value === '' || isValidEmail(input.value))) {
 			delete newState.errors.adminEmail;
 		}
 
@@ -148,15 +148,6 @@ class EventCreation extends React.Component<RouteComponentProps<any>, State> {
 		this.setState({
 			touched: Object.assign(this.state.touched, { [input.name]: true })
 		});
-	};
-
-	// onStartDatetimeFocusHandler = (event: any) => {
-	// 	event.persist();
-	// 	console.log(event);
-	// };
-
-	isValidEmail = (email: String) => {
-		return email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
 	};
 
 	onFieldBlurHandler = (event: React.FocusEvent<HTMLInputElement>) => {
@@ -172,7 +163,7 @@ class EventCreation extends React.Component<RouteComponentProps<any>, State> {
 				}
 				break;
 			case 'adminEmail':
-				if (input.value !== '' && !input.value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)) {
+				if (input.value !== '' && !isValidEmail(input.value)) {
 					errors = Object.assign(errors, { adminEmail: 'This is not a valid email' });
 				} else {
 					delete errors.adminName;

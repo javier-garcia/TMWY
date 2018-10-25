@@ -94,8 +94,8 @@ class VehicleCreation extends React.Component<Props> {
 			});
 		}
 
-		addVehicle(newVehicle).then((result: any) => {
-			onVehicleAdded(result.data.data.newVehicle);
+		addVehicle(newVehicle).then((newVehicle: any) => {
+			onVehicleAdded(newVehicle);
 		});
 	};
 

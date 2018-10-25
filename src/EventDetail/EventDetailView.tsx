@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import Event from './interfaces/Event';
-import Vehicle from './interfaces/Vehicle';
-import Passenger from './interfaces/Passenger';
+import Event from '../interfaces/Event';
+import Vehicle from '../interfaces/Vehicle';
+import Passenger from '../interfaces/Passenger';
 
-import { getEvent } from './providers/event.provider';
+import { getEvent } from '../providers/event.provider';
 
 import EventDetail from './EventDetail';
 import VehiclesSection from './VehiclesSection';

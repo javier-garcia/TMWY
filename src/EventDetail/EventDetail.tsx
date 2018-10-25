@@ -2,10 +2,12 @@ import React, { Fragment } from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
 
-import GoogleAPI from './components/GoogleAPI';
-import LocationMap from './components/LocationMap';
+import GoogleAPI from '../components/GoogleAPI';
+import LocationMap from '../components/LocationMap';
 
-import Event from './interfaces/Event';
+import { getParsedCoordinates } from '../utils';
+
+import Event from '../interfaces/Event';
 
 const Wrapper = styled.div`
 	height: 100%;
@@ -21,23 +23,10 @@ interface Props {
 }
 
 class EventDetail extends React.PureComponent<Props> {
-	getParsedCoordenates = () => {
-		const { event } = this.props;
-
-		if (event.place_coords == null) return null;
-
-		let splittedCoordenates = event.place_coords.split('/');
-
-		return {
-			lat: splittedCoordenates[0],
-			lng: splittedCoordenates[1]
-		};
-	};
-
 	render() {
 		const { event } = this.props;
 		const datetimeString = moment.unix(event.datetime!).format('dddd, DD/MM/YYYY, HH:mm');
-		const eventCoords = this.getParsedCoordenates();
+		const eventCoords = event.place_coords ? getParsedCoordinates(event.place_coords!) : null;
 
 		return (
 			<Wrapper>

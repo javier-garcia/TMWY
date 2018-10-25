@@ -6,7 +6,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import Landing from './Landing';
 import EventCreation from './EventCreation/EventCreation';
-import EventDetailView from './EventDetailView';
+import EventDetailView from './EventDetail/EventDetailView';
 
 const App = () => {
 	injectGlobal`
